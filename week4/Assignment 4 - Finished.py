@@ -9,6 +9,8 @@ import numpy as np
 import random
 
 
+
+
 class Person:
     def __init__(self):
         self.recover_prob = 0.2
@@ -90,12 +92,20 @@ class Village:
     def vaccinate_population(self):
         people_vaccinated_today = 0  # Init counter for the day
         for person_id in range(self.population.size):
-            if people_vaccinated_today == self.daily_vaccination_threshold:  # No more vacc today
+            if (
+                people_vaccinated_today == self.daily_vaccination_threshold
+            ):  # No more vacc today
                 break
-            elif self.population[person_id].sick == False and self.population[person_id].dead == False and self.population[person_id].vaccinated == False:
-                self.population[person_id].vaccinated = True  # Set flag to true
+            elif (
+                self.population[person_id].sick == False
+                and self.population[person_id].dead == False
+                and self.population[person_id].vaccinated == False
+            ):
+                self.population[
+                    person_id
+                ].vaccinated = True  # Set flag to true
                 people_vaccinated_today += 1  # Inc count
-    
+
     def advance_days(self, init_scenario=False):
         """Counts the status of the citizens in the community"""
         people_sick = 0
@@ -113,9 +123,10 @@ class Village:
                 people_vaccinated += 1  # Inc count
 
             person.day_passes(self.population, init_scenario)
-            
+
         if (
-            people_sick >= self.init_vaccination and self.vaccination_started == False
+            people_sick >= self.init_vaccination
+            and self.vaccination_started == False
         ):  # Threshold for started vacc reached
             self.vaccination_started = True  # set flag to true
             print(
@@ -130,15 +141,23 @@ class Village:
         """This function controls the simulation and what happends in a day"""
         current_day = 0
 
-        people_sick, people_recovered, people_dead, people_vaccinated = self.advance_days(
-            init_scenario=True
-        )
+        (
+            people_sick,
+            people_recovered,
+            people_dead,
+            people_vaccinated,
+        ) = self.advance_days(init_scenario=True)
         while people_sick != 0:
             print(
                 f"By day {current_day}: {people_sick} people are sick, {people_dead} are dead and {people_recovered} has recovered"
             )
             current_day += 1
-            people_sick, people_recovered, people_dead, people_vaccinated = self.advance_days()
+            (
+                people_sick,
+                people_recovered,
+                people_dead,
+                people_vaccinated,
+            ) = self.advance_days()
 
         days_sick_list = []  # Init empty list
         for person_id in range(self.population.size):  # Loop through the pop
